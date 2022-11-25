@@ -21,6 +21,22 @@
 // and diodes in addition to the inverters, NOR, NAND, and constant
 // gates provided by macro_sparecell.
 
+module dff (
+    output reg Q,
+    output wire Q_N,
+    input wire D, CLK, SET_B, RESET_B
+);
+    always @(negedge CLK) begin
+    if (RESET_B == 1'b0)
+        Q <= 1'b0;
+    else if (SET_B == 1'b0)
+        Q <= 1'b1;
+    else
+        Q <= D;
+    end
+    assign Q_N = ~Q;
+endmodule
+
 module spare_logic_block (
     `ifdef USE_POWER_PINS
         inout vccd,
@@ -45,108 +61,27 @@ module spare_logic_block (
     // Rename the logic0 outputs at the block pins.
     assign spare_xz = spare_logic0;
 
-    sky130_fd_sc_hd__conb_1 spare_logic_const [26:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
-            .HI(spare_logic1),
-            .LO(spare_logic0)
-    );
+    assign spare_logic1 = ~0;
+    assign spare_logic0 = 0;
 
-    sky130_fd_sc_hd__inv_2 spare_logic_inv [3:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
-            .Y(spare_xi),
-            .A(spare_logic0[3:0])
-    );
+    assign spare_xi = ~(spare_logic0[3:0]);
 
-    sky130_fd_sc_hd__inv_8 spare_logic_biginv (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
-            .Y(spare_xib),
-            .A(spare_logic0[4])
-    );
+    assign spare_xib = ~(spare_logic0[4]);
 
-    sky130_fd_sc_hd__nand2_2 spare_logic_nand [1:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
-            .Y(spare_xna),
-            .A(spare_logic0[6:5]),
-            .B(spare_logic0[8:7])
-    );
+    assign spare_xna = ~(spare_logic0[6:5] & spare_logic0[8:7]);
 
-    sky130_fd_sc_hd__nor2_2 spare_logic_nor [1:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
-            .Y(spare_xno),
-            .A(spare_logic0[10:9]),
-            .B(spare_logic0[12:11])
-    );
+    assign spare_xno = ~(spare_logic0[10:9] | spare_logic0[12:11]);
 
-    sky130_fd_sc_hd__mux2_2 spare_logic_mux [1:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
-            .X(spare_xmx),
-            .A0(spare_logic0[14:13]),
-            .A1(spare_logic0[16:15]),
-            .S(spare_logic0[18:17])
-    );
+    assign spare_xmx[1] = spare_logic0[18] ? spare_logic0[16] : spare_logic0[14];
+    assign spare_xmx[0] = spare_logic0[17] ? spare_logic0[15] : spare_logic0[13];
 
-    sky130_fd_sc_hd__dfbbp_1 spare_logic_flop [1:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
+    dff spare_logic_flop [1:0] (
             .Q(spare_xfq),
             .Q_N(spare_xfqn),
             .D(spare_logic0[20:19]),
             .CLK(spare_logic0[22:21]),
             .SET_B(spare_logic0[24:23]),
             .RESET_B(spare_logic0[26:25])
-    );
-
-    sky130_fd_sc_hd__tapvpwrvgnd_1 spare_logic_tap [1:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd)
-	`endif
-    );
-
-    sky130_fd_sc_hd__diode_2 spare_logic_diode [3:0] (
-	`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-	`endif
-	    .DIODE(spare_logic_nc)
     );
  
 endmodule

@@ -38,18 +38,6 @@ inout  LVPWR;
 inout  LVGND;
 `endif
 
-sky130_fd_sc_hvl__lsbufhv2lv_1 lvlshiftdown (
-`ifdef USE_POWER_PINS
-	.VPWR(VPWR),
-	.VPB(VPWR),
-
-	.LVPWR(LVPWR),
-
-	.VNB(VGND),
-	.VGND(VGND),
-`endif
-	.A(A),
-	.X(X)
-);
+assign X = A;
 
 endmodule

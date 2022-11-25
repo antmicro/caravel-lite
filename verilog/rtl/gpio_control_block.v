@@ -243,29 +243,8 @@ module gpio_control_block #(
     /* going to the user project.					*/
     assign user_gpio_in = pad_gpio_in & gpio_logic1;
 
-    (* keep *)
-    sky130_fd_sc_hd__macro_sparecell spare_cell (
-`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd)
-`endif
-    );
-
-    sky130_fd_sc_hd__conb_1 const_source (
-`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-`endif
-            .HI(one_unbuf),
-            .LO(zero_unbuf)
-    );
-
-    assign zero = zero_unbuf;
-    assign one = one_unbuf;
+    assign zero = 1'b0;
+    assign one = 1'b1;
 
 endmodule
 `default_nettype wire

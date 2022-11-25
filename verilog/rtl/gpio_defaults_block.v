@@ -39,16 +39,8 @@ module gpio_defaults_block #(
 
     // For the mask revision input, use an array of digital constant logic cells
 
-    sky130_fd_sc_hd__conb_1 gpio_default_value [12:0] (
-`ifdef USE_POWER_PINS
-            .VPWR(VPWR),
-            .VPB(VPWR),
-            .VNB(VGND),
-            .VGND(VGND),
-`endif
-            .HI(gpio_defaults_high),
-            .LO(gpio_defaults_low)
-    );
+    assign gpio_defaults_high = ~0;
+    assign gpio_defaults_low = 0;
 
     genvar i;
     generate

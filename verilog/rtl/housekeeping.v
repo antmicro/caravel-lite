@@ -273,15 +273,7 @@ wire mgmt_gpio_out_9_prebuff, mgmt_gpio_out_14_prebuff, mgmt_gpio_out_15_prebuff
     assign spimemio_flash_io0_di = (pass_thru_mgmt_delay) ? 1'b0 : pad_flash_io0_di;
     assign spimemio_flash_io1_di = (pass_thru_mgmt) ? 1'b0 : pad_flash_io1_di;
 
-(* keep *) sky130_fd_sc_hd__clkbuf_8 pad_flashh_clk_buff_inst (
-`ifdef USE_POWER_PINS
-        .VPWR(VPWR),
-        .VGND(VGND),
-        .VPB(VPWR),
-        .VNB(VGND),
-`endif
-	.A(pad_flash_clk_prebuff),
-    .X(pad_flash_clk));
+	assign pad_flash_clk = pad_flash_clk_prebuff;
 
     wire [11:0] mfgr_id;
     wire [7:0]  prod_id;
@@ -806,15 +798,7 @@ wire mgmt_gpio_out_9_prebuff, mgmt_gpio_out_14_prebuff, mgmt_gpio_out_15_prebuff
     assign mgmt_gpio_out_9_prebuff = (pass_thru_user) ? mgmt_gpio_in[4]
 			: mgmt_gpio_data[9];
 
-(* keep *) sky130_fd_sc_hd__clkbuf_8 mgmt_gpio_9_buff_inst (
-`ifdef USE_POWER_PINS
-        .VPWR(VPWR),
-        .VGND(VGND),
-        .VPB(VPWR),
-        .VNB(VGND),
-`endif
-	.A(mgmt_gpio_out_9_prebuff),
-    .X(mgmt_gpio_out[9]));
+	assign mgmt_gpio_out[9] = mgmt_gpio_out_9_prebuff;
 
     assign mgmt_gpio_out[8] = (pass_thru_user_delay) ? mgmt_gpio_in[3]
 			: mgmt_gpio_data[8];
@@ -857,28 +841,12 @@ wire mgmt_gpio_out_9_prebuff, mgmt_gpio_out_14_prebuff, mgmt_gpio_out_15_prebuff
     assign mgmt_gpio_out_15_prebuff = (clk2_output_dest == 1'b1) ? user_clock
 		: mgmt_gpio_data[15];
 
-(* keep *) sky130_fd_sc_hd__clkbuf_8 mgmt_gpio_15_buff_inst (
-`ifdef USE_POWER_PINS
-        .VPWR(VPWR),
-        .VGND(VGND),
-        .VPB(VPWR),
-        .VNB(VGND),
-`endif
-	.A(mgmt_gpio_out_15_prebuff),
-    .X(mgmt_gpio_out[15]));
+	assign mgmt_gpio_out[15] = mgmt_gpio_out_15_prebuff;
 
     assign mgmt_gpio_out_14_prebuff = (clk1_output_dest == 1'b1) ? wb_clk_i
 		: mgmt_gpio_data[14];
 
-(* keep *) sky130_fd_sc_hd__clkbuf_8 mgmt_gpio_14_buff_inst (
-`ifdef USE_POWER_PINS
-        .VPWR(VPWR),
-        .VGND(VGND),
-        .VPB(VPWR),
-        .VNB(VGND),
-`endif
-	.A(mgmt_gpio_out_14_prebuff),
-    .X(mgmt_gpio_out[14]));
+	assign mgmt_gpio_out[14] = mgmt_gpio_out_14_prebuff;
 
     assign mgmt_gpio_out[13] = (trap_output_dest == 1'b1) ? trap
 		: mgmt_gpio_data[13];
