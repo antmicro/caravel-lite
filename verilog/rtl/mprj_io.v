@@ -69,67 +69,27 @@ module mprj_io #(
     wire [6:0] no_connect_1a, no_connect_1b;
     wire [1:0] no_connect_2a, no_connect_2b;
 
-    sky130_ef_io__gpiov2_pad_wrapped  area1_io_pad [AREA1PADS - 1:0] (
-	`USER1_ABUTMENT_PINS
-	`ifndef	TOP_ROUTING
-	    .PAD(io[AREA1PADS - 1:0]),
-	`endif
-	    .OUT(io_out[AREA1PADS - 1:0]),
-	    .OE_N(oeb[AREA1PADS - 1:0]),
-	    .HLD_H_N(loop1_io[AREA1PADS - 1:0]),
-	    .ENABLE_H(enh[AREA1PADS - 1:0]),
-	    .ENABLE_INP_H(loop0_io[AREA1PADS - 1:0]),
-	    .ENABLE_VDDA_H(porb_h),
-	    .ENABLE_VSWITCH_H(loop0_io[AREA1PADS - 1:0]),
-	    .ENABLE_VDDIO(vccd_conb[AREA1PADS - 1:0]),
-	    .INP_DIS(inp_dis[AREA1PADS - 1:0]),
-	    .IB_MODE_SEL(ib_mode_sel[AREA1PADS - 1:0]),
-	    .VTRIP_SEL(vtrip_sel[AREA1PADS - 1:0]),
-	    .SLOW(slow_sel[AREA1PADS - 1:0]),
-	    .HLD_OVR(holdover[AREA1PADS - 1:0]),
-	    .ANALOG_EN(analog_en[AREA1PADS - 1:0]),
-	    .ANALOG_SEL(analog_sel[AREA1PADS - 1:0]),
-	    .ANALOG_POL(analog_pol[AREA1PADS - 1:0]),
-	    .DM(dm[AREA1PADS*3 - 1:0]),
-	    .PAD_A_NOESD_H({analog_noesd_io[AREA1PADS - 8:0], no_connect_1a}),
-	    .PAD_A_ESD_0_H({analog_io[AREA1PADS - 8:0], no_connect_1b}),
-	    .PAD_A_ESD_1_H(),
-	    .IN(io_in[AREA1PADS - 1:0]),
-	    .IN_H(io_in_3v3[AREA1PADS - 1:0]),
-	    .TIE_HI_ESD(loop1_io[AREA1PADS - 1:0]),
-	    .TIE_LO_ESD(loop0_io[AREA1PADS - 1:0])
-    );
+	IOBUF_INTERMDISABLE #(
+		.USE_IBUFDISABLE("TRUE")
+	) area1_io_pad [AREA1PADS - 1:0] (
+		.O(io_in[AREA1PADS - 1:0]),
+		.INTERMDISABLE(1'b0),
+		.I(io_out[AREA1PADS - 1:0]),
+		.IBUFDISABLE(~inp_dis[AREA1PADS - 1:0]),
+		.IO(io[AREA1PADS - 1:0]),
+		.T(oeb[AREA1PADS - 1:0])
+	);
 
-    sky130_ef_io__gpiov2_pad_wrapped area2_io_pad [TOTAL_PADS - AREA1PADS - 1:0] (
-	`USER2_ABUTMENT_PINS
-	`ifndef	TOP_ROUTING
-	    .PAD(io[TOTAL_PADS - 1:AREA1PADS]),
-	`endif
-	    .OUT(io_out[TOTAL_PADS - 1:AREA1PADS]),
-	    .OE_N(oeb[TOTAL_PADS - 1:AREA1PADS]),
-	    .HLD_H_N(loop1_io[TOTAL_PADS - 1:AREA1PADS]),
-	    .ENABLE_H(enh[TOTAL_PADS - 1:AREA1PADS]),
-	    .ENABLE_INP_H(loop0_io[TOTAL_PADS - 1:AREA1PADS]),
-	    .ENABLE_VDDA_H(porb_h),
-	    .ENABLE_VSWITCH_H(loop0_io[TOTAL_PADS - 1:AREA1PADS]),
-	    .ENABLE_VDDIO(vccd_conb[TOTAL_PADS - 1:AREA1PADS]),
-	    .INP_DIS(inp_dis[TOTAL_PADS - 1:AREA1PADS]),
-	    .IB_MODE_SEL(ib_mode_sel[TOTAL_PADS - 1:AREA1PADS]),
-	    .VTRIP_SEL(vtrip_sel[TOTAL_PADS - 1:AREA1PADS]),
-	    .SLOW(slow_sel[TOTAL_PADS - 1:AREA1PADS]),
-	    .HLD_OVR(holdover[TOTAL_PADS - 1:AREA1PADS]),
-	    .ANALOG_EN(analog_en[TOTAL_PADS - 1:AREA1PADS]),
-	    .ANALOG_SEL(analog_sel[TOTAL_PADS - 1:AREA1PADS]),
-	    .ANALOG_POL(analog_pol[TOTAL_PADS - 1:AREA1PADS]),
-	    .DM(dm[TOTAL_PADS*3 - 1:AREA1PADS*3]),
-	    .PAD_A_NOESD_H({no_connect_2a, analog_noesd_io[TOTAL_PADS - 10:AREA1PADS - 7]}),
-	    .PAD_A_ESD_0_H({no_connect_2b, analog_io[TOTAL_PADS - 10:AREA1PADS - 7]}),
-	    .PAD_A_ESD_1_H(),
-	    .IN(io_in[TOTAL_PADS - 1:AREA1PADS]),
-	    .IN_H(io_in_3v3[TOTAL_PADS - 1:AREA1PADS]),
-	    .TIE_HI_ESD(loop1_io[TOTAL_PADS - 1:AREA1PADS]),
-	    .TIE_LO_ESD(loop0_io[TOTAL_PADS - 1:AREA1PADS])
-    );
+	IOBUF_INTERMDISABLE #(
+		.USE_IBUFDISABLE("TRUE")
+	) area2_io_pad [TOTAL_PADS - AREA1PADS - 1:0] (
+		.O(io_in[TOTAL_PADS - 1:AREA1PADS]),
+		.INTERMDISABLE(1'b0),
+		.I(io_out[TOTAL_PADS - 1:AREA1PADS]),
+		.IBUFDISABLE(~inp_dis[TOTAL_PADS - 1:AREA1PADS]),
+		.IO(io[TOTAL_PADS - 1:AREA1PADS]),
+		.T(oeb[TOTAL_PADS - 1:AREA1PADS])
+	);
 
 endmodule
 // `default_nettype wire

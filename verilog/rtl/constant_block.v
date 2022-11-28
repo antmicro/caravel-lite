@@ -34,16 +34,8 @@ module constant_block (
     wire	one_unbuf;
     wire	zero_unbuf;
 
-    sky130_fd_sc_hd__conb_1 const_source (
-`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-`endif
-            .HI(one_unbuf),
-            .LO(zero_unbuf)
-    );
+    assign zero_unbuf = 1'b0;
+    assign one_unbuf = 1'b1;
 
     /* Buffer the constant outputs (could be synthesized) */
     /* NOTE:  Constant cell HI, LO outputs are connected to power	*/
@@ -51,27 +43,9 @@ module constant_block (
     /* enough to drive inputs in the I/O cells while ensuring ESD	*/
     /* requirements, without buffering.					*/
 
-    sky130_fd_sc_hd__buf_16 const_one_buf (
-`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-`endif
-            .A(one_unbuf),
-            .X(one)
-    );
+    assign one = one_unbuf;
+    assign zero = zero_unbuf;
 
-    sky130_fd_sc_hd__buf_16 const_zero_buf (
-`ifdef USE_POWER_PINS
-            .VPWR(vccd),
-            .VGND(vssd),
-            .VPB(vccd),
-            .VNB(vssd),
-`endif
-            .A(zero_unbuf),
-            .X(zero)
-    );
 
 endmodule
 `default_nettype wire

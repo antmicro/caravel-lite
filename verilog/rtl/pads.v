@@ -74,135 +74,40 @@
 	.SRC_BDY_LVC2(L2)
 
 `define INPUT_PAD(X,Y,CONB_ONE,CONB_ZERO) \
-	wire loop_zero_``X; \
-	wire loop_one_``X; \
-	sky130_ef_io__gpiov2_pad_wrapped X``_pad ( \
-	`MGMT_ABUTMENT_PINS \
-	`ifndef	TOP_ROUTING \
-		.PAD(X), \
-	`endif	\
-		.OUT(CONB_ZERO), \
-		.OE_N(CONB_ONE), \
-		.HLD_H_N(loop_one_``X), \
-		.ENABLE_H(porb_h), \
-		.ENABLE_INP_H(loop_zero_``X), \
-		.ENABLE_VDDA_H(porb_h), \
-		.ENABLE_VSWITCH_H(loop_zero_``X), \
-		.ENABLE_VDDIO(CONB_ONE), \
-		.INP_DIS(por), \
-		.IB_MODE_SEL(CONB_ZERO), \
-		.VTRIP_SEL(CONB_ZERO), \
-		.SLOW(CONB_ZERO),	\
-		.HLD_OVR(CONB_ZERO), \
-		.ANALOG_EN(CONB_ZERO), \
-		.ANALOG_SEL(CONB_ZERO), \
-		.ANALOG_POL(CONB_ZERO), \
-		.DM({CONB_ZERO, CONB_ZERO, CONB_ONE}), \
-		.PAD_A_NOESD_H(), \
-		.PAD_A_ESD_0_H(), \
-		.PAD_A_ESD_1_H(), \
-		.IN(Y), \
-		.IN_H(), \
-		.TIE_HI_ESD(loop_one_``X), \
-		.TIE_LO_ESD(loop_zero_``X) )
+	IBUF X``_pad ( \
+		.O(Y), \
+		.I(X) \
+	);
 
 `define OUTPUT_PAD(X,Y,CONB_ONE,CONB_ZERO,INPUT_DIS,OUT_EN_N) \
-	wire loop_zero_``X; \
-	wire loop_one_``X; \
-	sky130_ef_io__gpiov2_pad_wrapped X``_pad ( \
-	`MGMT_ABUTMENT_PINS \
-	`ifndef	TOP_ROUTING \
-		.PAD(X), \
-	`endif \
-		.OUT(Y), \
-		.OE_N(OUT_EN_N), \
-		.HLD_H_N(loop_one_``X), \
-		.ENABLE_H(porb_h),	\
-		.ENABLE_INP_H(loop_zero_``X), \
-		.ENABLE_VDDA_H(porb_h), \
-		.ENABLE_VSWITCH_H(loop_zero_``X), \
-		.ENABLE_VDDIO(CONB_ONE), \
-		.INP_DIS(INPUT_DIS), \
-		.IB_MODE_SEL(CONB_ZERO), \
-		.VTRIP_SEL(CONB_ZERO), \
-		.SLOW(CONB_ZERO),	\
-		.HLD_OVR(CONB_ZERO), \
-		.ANALOG_EN(CONB_ZERO), \
-		.ANALOG_SEL(CONB_ZERO), \
-		.ANALOG_POL(CONB_ZERO), \
-		.DM({CONB_ONE, CONB_ONE, CONB_ZERO}),	\
-		.PAD_A_NOESD_H(), \
-		.PAD_A_ESD_0_H(), \
-		.PAD_A_ESD_1_H(), \
-		.IN(), \
-		.IN_H(), \
-		.TIE_HI_ESD(loop_one_``X), \
-		.TIE_LO_ESD(loop_zero_``X)) 
+	IOBUF_INTERMDISABLE #( \
+		.USE_IBUFDISABLE("TRUE") \
+	) X``_pad ( \
+		.O(Y), \
+		.INTERMDISABLE(1'b0), \
+		.I(Y_OUT), \
+		.IBUFDISABLE(~INPUT_DIS), \
+		.IO(X), \
+		.T(OUT_EN_N) \
+	);
 
 `define OUTPUT_NO_INP_DIS_PAD(X,Y,CONB_ONE,CONB_ZERO,OUT_EN_N) \
-	wire loop_zero_``X; \
-	wire loop_one_``X; \
-	sky130_ef_io__gpiov2_pad_wrapped X``_pad ( \
-	`MGMT_ABUTMENT_PINS \
-	`ifndef	TOP_ROUTING \
-		.PAD(X), \
-	`endif \
-		.OUT(Y), \
-		.OE_N(OUT_EN_N), \
-		.HLD_H_N(loop_one_``X), \
-		.ENABLE_H(porb_h),	\
-		.ENABLE_INP_H(loop_zero_``X), \
-		.ENABLE_VDDA_H(porb_h), \
-		.ENABLE_VSWITCH_H(loop_zero_``X), \
-		.ENABLE_VDDIO(CONB_ONE), \
-		.INP_DIS(CONB_ZERO), \
-		.IB_MODE_SEL(CONB_ZERO), \
-		.VTRIP_SEL(CONB_ZERO), \
-		.SLOW(CONB_ZERO),	\
-		.HLD_OVR(CONB_ZERO), \
-		.ANALOG_EN(CONB_ZERO), \
-		.ANALOG_SEL(CONB_ZERO), \
-		.ANALOG_POL(CONB_ZERO), \
-		.DM({CONB_ONE, CONB_ONE, CONB_ZERO}), \
-		.PAD_A_NOESD_H(), \
-		.PAD_A_ESD_0_H(), \
-		.PAD_A_ESD_1_H(), \
-		.IN(), \
-		.IN_H(), \
-		.TIE_HI_ESD(loop_one_``X), \
-		.TIE_LO_ESD(loop_zero_``X)) 
+	OBUFT X``_pad ( \
+		.O(X), \
+		.I(Y), \
+		.T(OUT_EN_N) \
+	);
 
 `define INOUT_PAD(X,Y,CONB_ONE,CONB_ZERO,Y_OUT,INPUT_DIS,OUT_EN_N,MODE) \
-	wire loop_zero_``X; \
-	wire loop_one_``X; \
-	sky130_ef_io__gpiov2_pad_wrapped X``_pad ( \
-	`MGMT_ABUTMENT_PINS \
-	`ifndef	TOP_ROUTING \
-		.PAD(X), \
-	`endif	\
-		.OUT(Y_OUT),	\
-		.OE_N(OUT_EN_N), \
-		.HLD_H_N(loop_one_``X),	\
-		.ENABLE_H(porb_h), \
-		.ENABLE_INP_H(loop_zero_``X), \
-		.ENABLE_VDDA_H(porb_h), \
-		.ENABLE_VSWITCH_H(loop_zero_``X), \
-		.ENABLE_VDDIO(CONB_ONE), \
-		.INP_DIS(INPUT_DIS), \
-		.IB_MODE_SEL(CONB_ZERO), \
-		.VTRIP_SEL(CONB_ZERO), \
-		.SLOW(CONB_ZERO),	\
-		.HLD_OVR(CONB_ZERO), \
-		.ANALOG_EN(CONB_ZERO), \
-		.ANALOG_SEL(CONB_ZERO), \
-		.ANALOG_POL(CONB_ZERO), \
-		.DM(MODE), \
-		.PAD_A_NOESD_H(), \
-		.PAD_A_ESD_0_H(), \
-		.PAD_A_ESD_1_H(), \
-		.IN(Y),  \
-		.IN_H(), \
-		.TIE_HI_ESD(loop_one_``X), \
-		.TIE_LO_ESD(loop_zero_``X) )
+	IOBUF_INTERMDISABLE #( \
+		.USE_IBUFDISABLE("TRUE") \
+	) X``_pad ( \
+		.O(Y), \
+		.INTERMDISABLE(1'b0), \
+		.I(Y_OUT), \
+		.IBUFDISABLE(~INPUT_DIS), \
+		.IO(X), \
+		.T(OUT_EN_N) \
+	);
 
 // `default_nettype wire

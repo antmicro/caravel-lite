@@ -22,10 +22,12 @@
             "./verilog/rtl/mgmt_protect_hv.v",
             "./verilog/rtl/mprj_logic_high.v",
             "./verilog/rtl/mprj2_logic_high.v",
+            "./verilog/rtl/mprj_io.v",
             "./verilog/rtl/mgmt_protect.v",
             "./verilog/rtl/user_id_programming.v",
             "./verilog/rtl/xres_buf.v",
             "./verilog/rtl/spare_logic_block.v",
+            "./verilog/rtl/constant_block.v",
             "./verilog/rtl/chip_io.v",
             "./verilog/rtl/caravel.v"
         ],
