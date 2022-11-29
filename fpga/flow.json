@@ -29,6 +29,11 @@
             "./verilog/rtl/spare_logic_block.v",
             "./verilog/rtl/constant_block.v",
             "./verilog/rtl/chip_io.v",
+            "./verilog/rtl/simple_por.v",
+            "./verilog/rtl/gpio_signal_buffering.v",
+            "./verilog/rtl/debug_regs.v",
+            "./verilog/rtl/buff_flash_clkrst.v",
+            "./verilog/rtl/__user_project_wrapper.v",
             "./verilog/rtl/caravel.v"
         ],
         "synth_log": "synth.log",

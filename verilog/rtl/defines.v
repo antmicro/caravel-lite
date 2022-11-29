@@ -13,6 +13,8 @@
 // limitations under the License.
 // SPDX-License-Identifier: Apache-2.0
 
+`define CARAVEL_FPGA
+
 `default_nettype none
 
 `ifndef __GLOBAL_DEFINE_H

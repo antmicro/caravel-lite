@@ -52,6 +52,11 @@ module simple_por(
 
     // Instantiate two shmitt trigger buffers in series
 
+`ifdef CARAVEL_FPGA
+    assign mid = inode;
+    assign porb_h = mid;
+    assign porb_l = porb_h;
+`else
     sky130_fd_sc_hvl__schmittbuf_1 hystbuf1 (
 `ifdef USE_POWER_PINS
 	.VPWR(vdd3v3),
@@ -85,6 +90,7 @@ module simple_por(
 	.A(porb_h),
 	.X(porb_l)
     );
+`endif
 
     // since this is behavioral anyway, but this should be
     // replaced by a proper inverter
