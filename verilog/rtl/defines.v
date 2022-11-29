@@ -15,7 +15,11 @@
 
 `define CARAVEL_FPGA
 
+`ifdef CARAVEL_FPGA
+`default_nettype wire
+`else
 `default_nettype none
+`endif
 
 `ifndef __GLOBAL_DEFINE_H
 // Global parameters
