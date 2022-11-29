@@ -33,12 +33,19 @@ module simple_por(
 );
 
     wire mid;
+`ifdef CARAVEL_FPGA
+    wire inode;
+`else
     reg inode;
+`endif
 
     // This is a behavioral model!  Actual circuit is a resitor dumping
     // current (slowly) from vdd3v3 onto a capacitor, and this fed into
     // two schmitt triggers for strong hysteresis/glitch tolerance.
 
+`ifdef CARAVEL_FPGA
+    assign inode = 1'b1;
+`else
     initial begin
 	inode <= 1'b0; 
     end 
@@ -53,6 +60,7 @@ module simple_por(
     always @(negedge vdd3v3) begin
 	#500 inode <= 1'b0;
     end
+`endif
 
     // Instantiate two shmitt trigger buffers in series
 
