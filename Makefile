@@ -1371,5 +1371,8 @@ README.rst: README.src.rst docs/source/getting-started.rst docs/source/tool-vers
 clean-openlane:
 	rm -rf $(OPENLANE_ROOT)
 
-f4pga:
-	f4pga -vv build --flow ./fpga/flow.json
+f4pga: fpga/flow.json
+	f4pga -vv build --flow $<
+
+vivado: fpga/vivado.tcl
+	vivado -nolog -nojournal -mode batch -source $<
