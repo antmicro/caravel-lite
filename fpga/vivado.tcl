@@ -11,6 +11,7 @@ set sourcesDir [file join $projectRoot "verilog/rtl"]
 set sourceName [file join $sourcesDir "caravel.v"]
 set projectDir [file join $projectRoot "build/vivado"]
 set reportName [file join $projectDir "${projectName}_utilization.txt"]
+set bitstreamPath [file join $projectDir ${projectName}.bit]
 
 # main script
 
@@ -52,8 +53,44 @@ set_property is_global_include 1 [get_files "pads.v"]
 set_property top caravel [current_fileset]
 read_xdc "./fpga/arty.xdc"
 update_compile_order -fileset sources_1
-launch_runs synth_1
-wait_on_run synth_1
-open_run synth_1 -name synth_1
-opt_design
-report_utilization -file $reportName
+
+# Synthesis
+synth_design -directive default -top caravel -part $designPart
+
+# Synthesis report
+report_timing_summary -file [file join $projectDir ${projectName}_timing_synth.rpt]
+report_utilization -hierarchical -file [file join $projectDir ${projectName}_utilization_hierarchical_synth.rpt]
+report_utilization -file [file join $projectDir ${projectName}_utilization_synth.rpt]
+
+# Optimize design
+opt_design -directive default
+
+# Placement
+place_design -directive default
+
+# Placement report
+report_utilization -hierarchical -file [file join $projectDir ${projectName}_utilization_place.rpt]
+report_utilization -file [file join $projectDir ${projectName}_utilization_hierarchical_place.rpt]
+report_io -file [file join $projectDir ${projectName}_utilization_hierarchical_io.rpt]
+report_control_sets -verbose -file [file join $projectDir ${projectName}_control_sets.rpt]
+report_clock_utilization -file [file join $projectDir ${projectName}_clock_utilization.rpt]
+
+# Routing
+route_design -directive default
+phys_opt_design -directive default
+write_checkpoint -force [file join $projectDir ${projectName}_route.dcp]
+
+# Routing report
+report_timing_summary -no_header -no_detailed_paths
+report_route_status -file [file join $projectDir ${projectName}_route_status.rpt]
+report_drc -file [file join $projectDir ${projectName}_drc.rpt]
+report_timing_summary -datasheet -max_paths 10 -file [file join $projectDir ${projectName}_timing.rpt]
+report_power -file [file join $projectDir ${projectName}_power.rpt]
+set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
+
+# Bitstream generation
+write_bitstream -force ${bitstreamPath}
+write_cfgmem -force -format bin -interface spix4 -size 16 -loadbit "up 0x0 ${bitstreamPath}" -file [file join $projectDir ${projectName}.bin]
+
+# End
+quit

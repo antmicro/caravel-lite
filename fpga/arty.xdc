@@ -172,6 +172,7 @@ set_property LOC M14 [get_ports {mprj_io[37]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {mprj_io[37]}]
 ##
 
+create_clock -name clock -period 10.0 [get_ports clock]
 
 set_property INTERNAL_VREF 0.675 [get_iobanks 34]
 set_false_path -quiet -through [get_nets -hierarchical -filter {mr_ff == TRUE}]
