@@ -50,6 +50,7 @@ set_property is_global_include 1 [get_files "defines.v"]
 set_property is_global_include 1 [get_files "user_defines.v"]
 set_property is_global_include 1 [get_files "pads.v"]
 set_property top caravel [current_fileset]
+read_xdc "./fpga/arty.xdc"
 update_compile_order -fileset sources_1
 launch_runs synth_1
 wait_on_run synth_1
