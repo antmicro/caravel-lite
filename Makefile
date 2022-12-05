@@ -44,7 +44,7 @@ LARGE_FILES_GZ_SPLIT += $(addsuffix .00.split, $(ARCHIVES))
 
 MCW_ROOT?=$(PWD)/mgmt_core_wrapper
 MCW ?=LITEX_VEXRISCV
-MPW_TAG ?= mpw-8c
+MPW_TAG ?= litex-lock
 
 # PDK switch varient
 export PDK?=sky130A
@@ -54,7 +54,7 @@ MCW_LITE?=1
 
 ifeq ($(MCW),LITEX_VEXRISCV)
 	MCW_NAME := mcw-litex-vexriscv
-	MCW_REPO := https://github.com/efabless/caravel_mgmt_soc_litex
+	MCW_REPO := https://github.com/antmicro/caravel_mgmt_soc_litex
 	MCW_TAG := $(MPW_TAG)
 else
 	MCW_NAME := mcw-pico
@@ -1372,7 +1372,9 @@ clean-openlane:
 	rm -rf $(OPENLANE_ROOT)
 
 f4pga: fpga/flow.json
+	sed -i "s/\`default_nettype none/\`default_nettype wire/g" mgmt_core_wrapper/verilog/rtl/mgmt_core_wrapper.v
 	f4pga -vv build --flow $<
 
 vivado: fpga/vivado.tcl
+	sed -i "s/\`default_nettype none/\`default_nettype wire/g" mgmt_core_wrapper/verilog/rtl/mgmt_core_wrapper.v
 	vivado -nolog -nojournal -mode batch -source $<
