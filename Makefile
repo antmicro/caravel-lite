@@ -74,7 +74,7 @@ CARAVEL_ROOT ?= $(shell pwd)
 UPRJ_ROOT ?= $(shell pwd)
 
 # MANAGEMENT AREA ROOT
-MGMT_AREA_ROOT ?= $(shell pwd)/mgmt_core_wrapper 
+MGMT_AREA_ROOT ?= $(shell pwd)/mgmt_core_wrapper
 
 # Build tasks such as make ship, make generate_fill, make set_user_id, make final run in the foreground (1) or background (0)
 FOREGROUND ?= 1
@@ -1372,9 +1372,9 @@ clean-openlane:
 	rm -rf $(OPENLANE_ROOT)
 
 f4pga: fpga/flow.json
-	sed -i "s/\`default_nettype none/\`default_nettype wire/g" mgmt_core_wrapper/verilog/rtl/mgmt_core_wrapper.v
+	sed -i "s/\`default_nettype none/\`default_nettype wire/g" ${MCW_ROOT}/verilog/rtl/mgmt_core_wrapper.v
 	f4pga -vv build --flow $<
 
 vivado: fpga/vivado.tcl
-	sed -i "s/\`default_nettype none/\`default_nettype wire/g" mgmt_core_wrapper/verilog/rtl/mgmt_core_wrapper.v
-	vivado -nolog -nojournal -mode batch -source $<
+	sed -i "s/\`default_nettype none/\`default_nettype wire/g" ${MCW_ROOT}/verilog/rtl/mgmt_core_wrapper.v
+	env MCW=${MCW_ROOT} vivado -nolog -nojournal -mode batch -source $<

@@ -7,11 +7,15 @@ set projectRoot [file normalize [file join $scriptDir ..]]
 
 set projectName "caravel-arty"
 set designPart "xc7a35ticsg324-1L"
-set sourcesDir [file join $projectRoot "verilog/rtl"]
-set sourceName [file join $sourcesDir "caravel.v"]
 set projectDir [file join $projectRoot "build/vivado"]
 set reportName [file join $projectDir "${projectName}_utilization.txt"]
 set bitstreamPath [file join $projectDir ${projectName}.bit]
+
+if { [info exists env(MCW_ROOT) ] } {
+    set mgmtDir $::env(MCW_ROOT)
+} else {
+    set mgmtDir [file join $projectRoot "mgmt_core_wrapper"]
+}
 
 # main script
 
@@ -19,9 +23,9 @@ create_project -f $projectName $projectDir -part $designPart
 add_files -norecurse "./verilog/rtl/defines.v" \
     "./verilog/rtl/user_defines.v" \
     "./verilog/rtl/pads.v" \
-    "./mgmt_core_wrapper/verilog/rtl/mgmt_core.v" \
-    "./mgmt_core_wrapper/verilog/rtl/mgmt_core_wrapper.v" \
-    "./mgmt_core_wrapper/verilog/rtl/VexRiscv_MinDebug.v" \
+    "${mgmtDir}/verilog/rtl/mgmt_core.v" \
+    "${mgmtDir}/verilog/rtl/mgmt_core_wrapper.v" \
+    "${mgmtDir}/verilog/rtl/VexRiscv_MinDebug.v" \
     "./verilog/rtl/fpga_ram.v" \
     "./verilog/rtl/clock_div.v" \
     "./verilog/rtl/caravel_clocking.v" \
