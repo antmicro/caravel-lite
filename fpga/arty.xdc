@@ -1,3 +1,6 @@
+set_property CFGBVS VCCO [current_design]
+set_property CONFIG_VOLTAGE 3.3 [current_design]
+
 # Clock pin
 set_property LOC E3 [get_ports {clock}]
 set_property IOSTANDARD LVCMOS33 [get_ports {clock}]
@@ -13,7 +16,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports {gpio}]
 # flash
 set_property LOC L13 [get_ports {flash_csb}]
 set_property IOSTANDARD LVCMOS33 [get_ports {flash_csb}]
-set_property LOC E9 [get_ports {flash_clk}]
+set_property LOC L16 [get_ports {flash_clk}]
 set_property IOSTANDARD LVCMOS33 [get_ports {flash_clk}]
 set_property LOC K17 [get_ports {flash_io0}]
 set_property IOSTANDARD LVCMOS33 [get_ports {flash_io0}]
@@ -173,6 +176,9 @@ set_property IOSTANDARD LVCMOS33 [get_ports {mprj_io[37]}]
 ##
 
 create_clock -name clock -period 10.0 [get_ports clock]
+
+# WORKAROUND: housekeeping SPI clock input
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets padframe/mprj_pads/area1_io_pad[4]/O]
 
 set_property INTERNAL_VREF 0.675 [get_iobanks 34]
 set_false_path -quiet -through [get_nets -hierarchical -filter {mr_ff == TRUE}]
