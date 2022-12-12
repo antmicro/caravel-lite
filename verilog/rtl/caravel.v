@@ -251,6 +251,13 @@ module caravel (
     wire caravel_rstn;
 	
 	// top-level buffers
+	BUFR #(
+		.BUFR_DIVIDE("BYPASS")
+	) buf_rstn (
+		.O(caravel_rstn_buf),
+		.I(caravel_rstn)
+	);
+
 	buff_flash_clkrst flash_clkrst_buffers (
 	`ifdef USE_POWER_PINS
 	    .VPWR(vccd_core),
@@ -258,7 +265,6 @@ module caravel (
 	`endif
 	.in_n({
 		caravel_clk,
-		caravel_rstn,
 		flash_clk_frame, 
 		flash_csb_frame, 
 		flash_clk_oeb, 
@@ -273,9 +279,8 @@ module caravel (
 		clock_core,
 		flash_io1_di, 
 		flash_io0_di }),
-	.out_s({ 
-		caravel_clk_buf,
-		caravel_rstn_buf,
+	.out_s({
+		caravel_clk_buf, 
 		flash_clk_frame_buf, 
 		flash_csb_frame_buf, 
 		flash_clk_oeb_buf, 
