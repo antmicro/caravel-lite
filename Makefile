@@ -1377,4 +1377,4 @@ f4pga: fpga/flow.json
 
 vivado: fpga/vivado.tcl
 	sed -i "s/\`default_nettype none/\`default_nettype wire/g" ${MCW_ROOT}/verilog/rtl/mgmt_core_wrapper.v
-	env MCW=${MCW_ROOT} vivado -nolog -nojournal -mode batch -source $<
+	env MCW_ROOT=${MCW_ROOT} vivado -nolog -nojournal -mode batch -source $<
