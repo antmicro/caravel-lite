@@ -10,7 +10,7 @@ set_property LOC C2 [get_ports {resetb}]
 set_property IOSTANDARD LVCMOS33 [get_ports {resetb}]
 
 # gpio - IO1
-set_property LOC U16 [get_ports {gpio}]
+set_property LOC T10 [get_ports {gpio}]
 set_property IOSTANDARD LVCMOS33 [get_ports {gpio}]
 
 # flash
@@ -177,10 +177,4 @@ set_property IOSTANDARD LVCMOS33 [get_ports {mprj_io[37]}]
 
 create_clock -name clock -period 10.0 [get_ports clock]
 
-# WORKAROUND: housekeeping SPI clock input
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets padframe/mprj_pads/area1_io_pad[4]/O]
-
 set_property INTERNAL_VREF 0.675 [get_iobanks 34]
-set_false_path -quiet -through [get_nets -hierarchical -filter {mr_ff == TRUE}]
-set_false_path -quiet -to [get_pins -filter {REF_PIN_NAME == PRE} -of_objects [get_cells -hierarchical -filter {ars_ff1 == TRUE || ars_ff2 == TRUE}]]
-set_max_delay 2 -quiet -from [get_pins -filter {REF_PIN_NAME == C} -of_objects [get_cells -hierarchical -filter {ars_ff1 == TRUE}]] -to [get_pins -filter {REF_PIN_NAME == D} -of_objects [get_cells -hierarchical -filter {ars_ff2 == TRUE}]]
