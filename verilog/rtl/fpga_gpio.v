@@ -1,14 +1,14 @@
 `default_nettype wire
 
 module fpga_gpio (
-    inout io,
-    input o,
-    output i,
-    input oe,
-    input ie
+    inout pad_io,
+    input chip_o,
+    output chip_i,
+    input chip_oe,
+    input chip_ie
 );
 
-    assign io = oe ? o : 'bz;
-    assign i = ie ? io : 'b0;
+    assign chip_i = (chip_ie ? pad_io : 'bz);
+    assign pad_io = (chip_oe ? chip_o : 'bz);
 
 endmodule

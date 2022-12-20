@@ -79,38 +79,38 @@
 
 `define INPUT_PAD(X,Y,CONB_ONE,CONB_ZERO) \
 	fpga_gpio X``_pad ( \
-		.i(Y), \
-		.io(X), \
-		.ie(1'b1), \
-		.o(1'b0), \
-		.oe(1'b0) \
+		.chip_i(Y), \
+		.pad_io(X), \
+		.chip_ie(1'b1), \
+		.chip_o(1'b0), \
+		.chip_oe(1'b0) \
 	);
 
 `define OUTPUT_PAD(X,Y,CONB_ONE,CONB_ZERO,INPUT_DIS,OUT_EN_N) \
 	fpga_gpio X``_pad ( \
-		.io(X), \
-		.o(Y), \
-		.oe(OUT_EN_N), \
-		.i(1'b0), \
-		.ie(~INPUT_DIS) \
+		.pad_io(X), \
+		.chip_o(Y), \
+		.chip_oe(~OUT_EN_N), \
+		.chip_i(1'b0), \
+		.chip_ie(INPUT_DIS) \
 	);
 
 `define OUTPUT_NO_INP_DIS_PAD(X,Y,CONB_ONE,CONB_ZERO,OUT_EN_N) \
 	fpga_gpio X``_pad ( \
-		.io(X), \
-		.o(Y), \
-		.oe(OUT_EN_N), \
-		.i(1'b0), \
-		.ie(1'b0) \
+		.pad_io(X), \
+		.chip_o(Y), \
+		.chip_oe(~OUT_EN_N), \
+		.chip_i(1'b0), \
+		.chip_ie(1'b0) \
 	);
 
 `define INOUT_PAD(X,Y,CONB_ONE,CONB_ZERO,Y_OUT,INPUT_DIS,OUT_EN_N,MODE) \
 	fpga_gpio X``_pad ( \
-		.o(Y), \
-		.i(Y_OUT), \
-		.ie(~INPUT_DIS), \
-		.io(X), \
-		.oe(OUT_EN_N) \
+		.chip_i(Y), \
+		.chip_o(Y_OUT), \
+		.chip_ie(INPUT_DIS), \
+		.pad_io(X), \
+		.chip_oe(~OUT_EN_N) \
 	);
 
 // `default_nettype wire
