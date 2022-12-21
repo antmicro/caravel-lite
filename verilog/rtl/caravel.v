@@ -179,12 +179,6 @@ module caravel (
     wire [`MPRJ_IO_PADS-1:0] mgmt_io_oeb;	/* output enable, used only by	*/
 						/* the three-pin interfaces	*/
     wire [`MPRJ_PWR_PADS-1:0] pwr_ctrl_nc;	/* no-connects */
-
-    /* Buffers are placed between housekeeping and gpio_control_block		*/
-    /* instances to mitigate timing issues on very long (> 1.5mm) wires.	*/
-    wire [`MPRJ_IO_PADS-1:0] mgmt_io_in_hk;	/* mgmt_io_in at housekeeping	*/
-    wire [`MPRJ_IO_PADS-1:0] mgmt_io_out_hk;	/* mgmt_io_out at housekeeping	*/
-    wire [`MPRJ_IO_PADS-1:0] mgmt_io_oeb_hk;	/* mgmt_io_oeb at housekeeping	*/
     
     wire clock_core;
 
@@ -736,9 +730,9 @@ module caravel (
         .serial_data_1(mprj_io_loader_data_1),
         .serial_data_2(mprj_io_loader_data_2),
 
-	.mgmt_gpio_in(mgmt_io_in_hk),
-	.mgmt_gpio_out(mgmt_io_out_hk),
-	.mgmt_gpio_oeb(mgmt_io_oeb_hk),
+	.mgmt_gpio_in(mgmt_io_in),
+	.mgmt_gpio_out(mgmt_io_out),
+	.mgmt_gpio_oeb(mgmt_io_oeb),
 
 	.pwr_ctrl_out(pwr_ctrl_nc),	/* Not used in this version */
 
