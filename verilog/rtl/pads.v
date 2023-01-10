@@ -78,39 +78,16 @@
 	.SRC_BDY_LVC2(L2)
 
 `define INPUT_PAD(X,Y,CONB_ONE,CONB_ZERO) \
-	fpga_gpio X``_pad ( \
-		.chip_i(Y), \
-		.pad_io(X), \
-		.chip_ie(1'b1), \
-		.chip_o(1'b0), \
-		.chip_oe(1'b0) \
-	);
+	assign Y = X;
 
 `define OUTPUT_PAD(X,Y,CONB_ONE,CONB_ZERO,INPUT_DIS,OUT_EN_N) \
-	fpga_gpio X``_pad ( \
-		.pad_io(X), \
-		.chip_o(Y), \
-		.chip_oe(~OUT_EN_N), \
-		.chip_i(1'b0), \
-		.chip_ie(INPUT_DIS) \
-	);
+    assign X = (OUT_EN_N ? 'bz : Y);
 
 `define OUTPUT_NO_INP_DIS_PAD(X,Y,CONB_ONE,CONB_ZERO,OUT_EN_N) \
-	fpga_gpio X``_pad ( \
-		.pad_io(X), \
-		.chip_o(Y), \
-		.chip_oe(~OUT_EN_N), \
-		.chip_i(1'b0), \
-		.chip_ie(1'b0) \
-	);
+	assign X = (OUT_EN_N ? 'bz : Y);
 
 `define INOUT_PAD(X,Y,CONB_ONE,CONB_ZERO,Y_OUT,INPUT_DIS,OUT_EN_N,MODE) \
-	fpga_gpio X``_pad ( \
-		.chip_i(Y), \
-		.chip_o(Y_OUT), \
-		.chip_ie(INPUT_DIS), \
-		.pad_io(X), \
-		.chip_oe(~OUT_EN_N) \
-	);
+	assign X = (OUT_EN_N ? 'bz : Y_OUT); \
+	assign Y = (INPUT_DIS ? 'bz : X);
 
 // `default_nettype wire
